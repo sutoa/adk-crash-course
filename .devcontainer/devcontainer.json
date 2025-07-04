@@ -1,0 +1,20 @@
+{
+    "name": "ADK crash course DevContainer",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "adk-app",
+    "workspaceFolder": "/workspace",
+    // "postCreateCommand": "pip install -r requirements.txt",
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "terminal.integrated.defaultProfile.linux": "bash"
+        },
+        "extensions": [
+          "ms-python.python",
+          "ms-toolsai.jupyter",
+          "ms-python.vscode-pylance"
+        ]
+      }
+    }
+  }
+  
