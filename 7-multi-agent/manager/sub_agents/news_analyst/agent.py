@@ -1,9 +1,14 @@
-from google.adk.agents import Agent
-from google.adk.tools import google_search
+import os
+from google.adk.agents import LlmAgent
+from google.adk.models.lite_llm import LiteLlm
+from .search_tool import search_news
 
-news_analyst = Agent(
+news_analyst = LlmAgent(
     name="news_analyst",
-    model="gemini-2.0-flash",
+    model=LiteLlm(
+        model="openai/gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
     description="News analyst agent",
     instruction="""
     You are a helpful assistant that can analyze news articles and provide a summary of the news.
@@ -12,5 +17,5 @@ news_analyst = Agent(
 
     If the user ask for news using a relative time, you should use the get_current_time tool to get the current time to use in the search query.
     """,
-    tools=[google_search],
+    tools=[search_news],
 )

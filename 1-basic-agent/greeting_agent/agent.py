@@ -1,9 +1,14 @@
-from google.adk.agents import Agent
+import os
+from google.adk.agents import Agent, LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 
-root_agent = Agent(
+root_agent = LlmAgent(
     name="greeting_agent",
     # https://ai.google.dev/gemini-api/docs/models
-    model="gemini-2.0-flash",
+    model=LiteLlm(
+        model="openai/gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
     description="Greeting agent",
     instruction="""
     You are a helpful assistant that greets the user. 

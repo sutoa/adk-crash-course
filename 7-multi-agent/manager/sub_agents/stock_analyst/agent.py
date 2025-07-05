@@ -1,7 +1,9 @@
+import os
 from datetime import datetime
 
+from google.adk.models.lite_llm import LiteLlm
 import yfinance as yf
-from google.adk.agents import Agent
+from google.adk.agents import Agent, LlmAgent
 
 
 def get_stock_price(ticker: str) -> dict:
@@ -37,9 +39,12 @@ def get_stock_price(ticker: str) -> dict:
 
 
 # Create the root agent
-stock_analyst = Agent(
+stock_analyst = LlmAgent(
     name="stock_analyst",
-    model="gemini-2.0-flash",
+    model=LiteLlm(
+        model="openai/gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
     description="An agent that can look up stock prices and track them over time.",
     instruction="""
     You are a helpful stock market assistant that helps users track their stocks of interest.

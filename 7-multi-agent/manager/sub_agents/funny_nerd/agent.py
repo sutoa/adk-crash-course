@@ -1,4 +1,6 @@
-from google.adk.agents import Agent
+import os
+from google.adk.agents import Agent, LlmAgent
+from google.adk.models.lite_llm import LiteLlm
 from google.adk.tools.tool_context import ToolContext
 
 
@@ -28,9 +30,12 @@ def get_nerd_joke(topic: str, tool_context: ToolContext) -> dict:
 
 
 # Create the funny nerd agent
-funny_nerd = Agent(
+funny_nerd = LlmAgent(
     name="funny_nerd",
-    model="gemini-2.0-flash",
+    model=LiteLlm(
+        model="openai/gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
     description="An agent that tells nerdy jokes about various topics.",
     instruction="""
     You are a funny nerd agent that tells nerdy jokes about various topics.
