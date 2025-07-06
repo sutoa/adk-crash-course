@@ -93,7 +93,7 @@ def after_agent_callback(callback_context: CallbackContext) -> Optional[types.Co
 # Create the Agent
 root_agent = LlmAgent(
     name="before_after_agent",
-     model=LiteLlm(
+    model=LiteLlm(
         model="openai/gpt-4o-mini",
         api_key=os.getenv("OPENAI_API_KEY"),
     ),
