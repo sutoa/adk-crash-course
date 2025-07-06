@@ -6,11 +6,13 @@ for logging purposes.
 """
 
 from datetime import datetime
+import os
 from typing import Optional
 
 from google.adk.agents import LlmAgent
 from google.adk.agents.callback_context import CallbackContext
 from google.genai import types
+from google.adk.models.lite_llm import LiteLlm
 
 
 def before_agent_callback(callback_context: CallbackContext) -> Optional[types.Content]:
@@ -91,7 +93,10 @@ def after_agent_callback(callback_context: CallbackContext) -> Optional[types.Co
 # Create the Agent
 root_agent = LlmAgent(
     name="before_after_agent",
-    model="gemini-2.0-flash",
+     model=LiteLlm(
+        model="openai/gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
     description="A basic agent that demonstrates before and after agent callbacks",
     instruction="""
     You are a friendly greeting agent. Your name is {agent_name}.

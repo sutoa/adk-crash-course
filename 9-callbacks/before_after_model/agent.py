@@ -7,12 +7,14 @@ to filter content and log model interactions.
 
 import copy
 from datetime import datetime
+import os
 from typing import Optional
 
 from google.adk.agents import LlmAgent
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.models import LlmRequest, LlmResponse
 from google.genai import types
+from google.adk.models.lite_llm import LiteLlm
 
 
 def before_model_callback(
@@ -147,7 +149,10 @@ def after_model_callback(
 # Create the Agent
 root_agent = LlmAgent(
     name="content_filter_agent",
-    model="gemini-2.0-flash",
+    model=LiteLlm(
+        model="openai/gpt-4o-mini",
+        api_key=os.getenv("OPENAI_API_KEY"),
+    ),
     description="An agent that demonstrates model callbacks for content filtering and logging",
     instruction="""
     You are a helpful assistant.
