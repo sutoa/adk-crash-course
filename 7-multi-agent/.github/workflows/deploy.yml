@@ -1,0 +1,61 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  PROJECT_ID: your-gcp-project-id        # Replace with your GCP project ID
+  REGION: us-central1                    # Replace with your region
+  REGISTRY_HOST: ${{ secrets.REGISTRY_HOST }}  # e.g., us-central1-docker.pkg.dev
+  REGISTRY_PATH: ${{ secrets.REGISTRY_PATH }}  # e.g., your-project/your-existing-repo
+  SERVICE_NAME: multi-agent              # Cloud Run service name
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Google Auth
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+        token_format: 'access_token'
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: Configure Docker Authentication
+      run: |
+        gcloud auth configure-docker ${{ env.REGISTRY_HOST }} --quiet
+
+    - name: Build and Push Docker image
+      run: |
+        # Build the image
+        docker build -t ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_PATH }}/${{ env.SERVICE_NAME }}:${{ github.sha }} .
+        docker tag ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_PATH }}/${{ env.SERVICE_NAME }}:${{ github.sha }} ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_PATH }}/${{ env.SERVICE_NAME }}:latest
+        
+        # Push both tags
+        docker push ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_PATH }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+        docker push ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_PATH }}/${{ env.SERVICE_NAME }}:latest
+
+    - name: Deploy to Cloud Run
+      id: deploy
+      uses: google-github-actions/deploy-cloudrun@v2
+      with:
+        service: ${{ env.SERVICE_NAME }}
+        region: ${{ env.REGION }}
+        image: ${{ env.REGISTRY_HOST }}/${{ env.REGISTRY_PATH }}/${{ env.SERVICE_NAME }}:${{ github.sha }}
+        env_vars: |
+          GOOGLE_API_KEY=${{ secrets.GOOGLE_API_KEY }}
+        
+    - name: Show Output URL
+      run: echo ${{ steps.deploy.outputs.url }} 
