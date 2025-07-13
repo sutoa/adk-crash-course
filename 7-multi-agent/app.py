@@ -1,9 +1,15 @@
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 from google.genai import types
-from manager.agent import manager_agent
+from manager.agent import root_agent
 from typing import Optional
 
 # Initialize FastAPI app
@@ -18,7 +24,7 @@ session_service = InMemorySessionService()
 
 # Initialize the runner with the manager agent
 runner = Runner(
-    agent=manager_agent,
+    agent=root_agent,
     app_name="Multi-Agent System",
     session_service=session_service,
 )
