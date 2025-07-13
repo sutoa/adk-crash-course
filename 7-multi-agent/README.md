@@ -226,3 +226,8 @@ You can exit the conversation or stop the server by pressing `Ctrl+C` in your te
 
 - [ADK Multi-Agent Systems Documentation](https://google.github.io/adk-docs/agents/multi-agent-systems/)
 - [Agent Tools Documentation](https://google.github.io/adk-docs/tools/function-tools/#3-agent-as-a-tool)
+
+## Additional Notes by Tong
+
+- from the 7-multi-agent folder, we can use both 'adk web' and 'adk run manager' to run the agents
+- we can also start the agents with fastAPI by doing 'uvicorn app:app --reload --host 0.0.0.0 --port 8080'
