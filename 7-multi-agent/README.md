@@ -226,3 +226,41 @@ You can exit the conversation or stop the server by pressing `Ctrl+C` in your te
 
 - [ADK Multi-Agent Systems Documentation](https://google.github.io/adk-docs/agents/multi-agent-systems/)
 - [Agent Tools Documentation](https://google.github.io/adk-docs/tools/function-tools/#3-agent-as-a-tool)
+
+## Additional Notes by Tong
+
+- from the 7-multi-agent folder, tried to run it in several ways
+    * what's working
+        - 'adk web' - i only need .env in the manager folder
+        - 'adk run manager' - in order for adk run to work properly with the news agent and the stock agent, which both requires access to openai, i have to copy .env to the sub folders for those 2 agents; adk web and adk run seem to diff in loading .env
+        - 'python app.py' - swagger link is /localhost:8080 docs from there you can submit the prompt using the 'chat' endpoint
+    * what's NOT working
+        - 'adk api_server manager' OR 'adk api_server' when i'm inside the manager folder; neither worked. going to localhost:8000/docs gives generic apis, not the manager specific ones
+- how did i create the app.py? 
+- 7/20/25 - run app.py in docker engine on Mac
+
+
+```bash
+# Build the Docker image
+cd 7-multi-agent
+docker build -t multi-agent .
+
+# Run the container with .env file mounted
+docker run -p 8081:8081 -v "$(pwd)/.env:/app/.env" multi-agent
+
+# Tail the log 
+docker ps -q --filter ancestor=multi-agent | xargs docker logs -f
+
+# List files in the container
+docker exec $(docker ps -q --filter ancestor=multi-agent) ls -la /app
+
+# To log into the docker container
+docker exec -it $(docker ps -q --filter ancestor=multi-agent) /bin/bash
+
+# To stop the container
+docker exec $(docker ps -q --filter ancestor=multi-agent)
+
+# Access the API
+# Open browser and go to: http://localhost:8081/docs
+```
+
