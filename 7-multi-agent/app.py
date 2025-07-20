@@ -1,9 +1,5 @@
 from dotenv import load_dotenv
 import os
-
-# Load environment variables from .env file
-load_dotenv()
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from google.adk.runners import Runner
@@ -11,6 +7,9 @@ from google.adk.sessions import InMemorySessionService
 from google.genai import types
 from manager.agent import root_agent
 from typing import Optional
+
+# Load environment variables
+load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -81,4 +80,9 @@ async def chat(request: ChatRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8080) 
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=int(os.getenv("PORT", 8081)),
+        reload=True  # Enable auto-reload for development
+    ) 

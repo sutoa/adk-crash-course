@@ -1,4 +1,4 @@
-FROM python:3.9-slim
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app
@@ -11,7 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Set environment variables
-ENV PORT=8080
+ENV PORT=8081
+ENV PYTHONPATH=/app
 
-# Run the application
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app 
+# Run the application with uvicorn
+CMD uvicorn app:app --host 0.0.0.0 --port $PORT 

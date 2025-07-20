@@ -237,3 +237,30 @@ You can exit the conversation or stop the server by pressing `Ctrl+C` in your te
     * what's NOT working
         - 'adk api_server manager' OR 'adk api_server' when i'm inside the manager folder; neither worked. going to localhost:8000/docs gives generic apis, not the manager specific ones
 - how did i create the app.py? 
+- 7/20/25 - run app.py in docker engine on Mac
+
+
+```bash
+# Build the Docker image
+cd 7-multi-agent
+docker build -t multi-agent .
+
+# Run the container with .env file mounted
+docker run -p 8081:8081 -v "$(pwd)/.env:/app/.env" multi-agent
+
+# Tail the log 
+docker ps -q --filter ancestor=multi-agent | xargs docker logs -f
+
+# List files in the container
+docker exec $(docker ps -q --filter ancestor=multi-agent) ls -la /app
+
+# To log into the docker container
+docker exec -it $(docker ps -q --filter ancestor=multi-agent) /bin/bash
+
+# To stop the container
+docker exec $(docker ps -q --filter ancestor=multi-agent)
+
+# Access the API
+# Open browser and go to: http://localhost:8081/docs
+```
+
