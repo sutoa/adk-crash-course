@@ -229,5 +229,11 @@ You can exit the conversation or stop the server by pressing `Ctrl+C` in your te
 
 ## Additional Notes by Tong
 
-- from the 7-multi-agent folder, we can use both 'adk web' and 'adk run manager' to run the agents
-- we can also start the agents with fastAPI by doing 'uvicorn app:app --reload --host 0.0.0.0 --port 8080'
+- from the 7-multi-agent folder, tried to run it in several ways
+    * what's working
+        - 'adk web' - i only need .env in the manager folder
+        - 'adk run manager' - in order for adk run to work properly with the news agent and the stock agent, which both requires access to openai, i have to copy .env to the sub folders for those 2 agents; adk web and adk run seem to diff in loading .env
+        - 'python app.py' - swagger link is /localhost:8080 docs from there you can submit the prompt using the 'chat' endpoint
+    * what's NOT working
+        - 'adk api_server manager' OR 'adk api_server' when i'm inside the manager folder; neither worked. going to localhost:8000/docs gives generic apis, not the manager specific ones
+- how did i create the app.py? 
